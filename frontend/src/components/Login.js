@@ -16,7 +16,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', formData);
+      const response = await axios.post('https://full-stack-sitetest.onrender.com/api/auth/login', formData);
       setMessage(response.data.message);
       // Store token if needed
       localStorage.setItem('token', response.data.token);
