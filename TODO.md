@@ -1,2 +1,0 @@
-- [x] Update Login.js: Replace 'http://localhost:5000/api/auth/login' with 'https://full-stack-sitetest.onrender.com/api/auth/login'
-- [x] Update Register.js: Replace 'http://localhost:5000/api/auth/register' with 'https://full-stack-sitetest.onrender.com/api/auth/register'

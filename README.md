@@ -30,7 +30,7 @@ A simple full-stack MERN application with user registration and login functional
    ```
 
 4. **Test the App**
-   - Open http://localhost:3000
+   - Open https://full-stack-sitetest-frontend.onrender.com
    - Login with: `john.doe@example.com` / `password123`
 
 ## 📁 Project Structure
