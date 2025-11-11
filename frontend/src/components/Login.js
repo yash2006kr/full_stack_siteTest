@@ -8,6 +8,7 @@ const Login = () => {
     password: '',
   });
   const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -15,40 +16,60 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setMessage('');
     try {
-      const response = await axios.post('https://full-stack-sitetest.onrender.com/api/auth/login', formData);
-      setMessage(response.data.message);
-      // Store token if needed
+      const response = await axios.post('http://localhost:5000/api/auth/login', formData);
+      setMessage({ text: response.data.message, type: 'success' });
       localStorage.setItem('token', response.data.token);
     } catch (error) {
-      setMessage(error.response.data.message);
+      setMessage({ text: error.response?.data?.message || 'Login failed', type: 'error' });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div>
+    <div className={`form-container ${isLoading ? 'loading' : ''}`}>
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        <button type="submit">Login</button>
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Enter your email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            aria-describedby="email-error"
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            minLength="6"
+          />
+        </div>
+        <button type="submit" disabled={isLoading}>
+          {isLoading && <span className="loading"></span>}
+          {isLoading ? 'Logging in...' : 'Login'}
+        </button>
       </form>
-      {message && <p>{message}</p>}
-      <Link to="/register">Don't have an account? Register</Link>
+      {message && (
+        <div className={`message ${message.type}`} role="alert">
+          {message.text}
+        </div>
+      )}
+      <Link to="/register" className="link">Don't have an account? Register</Link>
     </div>
   );
 };
