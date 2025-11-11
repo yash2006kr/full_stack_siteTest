@@ -20,7 +20,7 @@ const Register = () => {
     setIsLoading(true);
     setMessage('');
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/register', formData);
+      const response = await axios.post('https://full-stack-sitetest.onrender.com/api/auth/register', formData);
       setMessage({ text: response.data.message, type: 'success' });
     } catch (error) {
       setMessage({ text: error.response?.data?.message || 'Registration failed', type: 'error' });

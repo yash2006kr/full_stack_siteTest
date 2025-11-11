@@ -10,7 +10,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/mern-auth')
+mongoose.connect(process.env.MONGO_URI || 'mongodb+srv://shubhashreer2439:Shree2439@cluster0.p8hbcku.mongodb.net/')
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.log(err));
 

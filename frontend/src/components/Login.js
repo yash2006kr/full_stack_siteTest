@@ -19,7 +19,7 @@ const Login = () => {
     setIsLoading(true);
     setMessage('');
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', formData);
+      const response = await axios.post('https://full-stack-sitetest.onrender.com/api/auth/login', formData);
       setMessage({ text: response.data.message, type: 'success' });
       localStorage.setItem('token', response.data.token);
     } catch (error) {
