@@ -1,14 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    email: '',
+    identifier: '',
     password: '',
   });
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const token = params.get('token');
+    const error = params.get('error');
+    if (token) {
+      localStorage.setItem('token', token);
+      setMessage({ text: 'Login successful!', type: 'success' });
+    } else if (error) {
+      setMessage({ text: 'OAuth login failed', type: 'error' });
+    }
+  }, [location]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -29,21 +42,26 @@ const Login = () => {
     }
   };
 
+  const handleGoogleLogin = () => {
+    window.location.href = 'https://full-stack-sitetest.onrender.com/api/auth/google';
+  };
+
+  
+
   return (
     <div className={`form-container ${isLoading ? 'loading' : ''}`}>
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="email">Email</label>
+          <label htmlFor="identifier">Email or Username</label>
           <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="Enter your email"
-            value={formData.email}
+            type="text"
+            id="identifier"
+            name="identifier"
+            placeholder="Enter your email or username"
+            value={formData.identifier}
             onChange={handleChange}
             required
-            aria-describedby="email-error"
           />
         </div>
         <div className="form-group">
@@ -64,6 +82,9 @@ const Login = () => {
           {isLoading ? 'Logging in...' : 'Login'}
         </button>
       </form>
+      <button onClick={handleGoogleLogin} className="google-login-btn">
+        Login with Google
+      </button>
       {message && (
         <div className={`message ${message.type}`} role="alert">
           {message.text}

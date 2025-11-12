@@ -1,9 +1,12 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const passport = require('passport');
 const User = require('../models/User');
 
 const router = express.Router();
+
+ 
 
 // Register
 router.post('/register', async (req, res) => {
@@ -25,14 +28,20 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// Login
+// Login (supports email or username)
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+  const { identifier, password } = req.body; // identifier can be email or username
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({
+      $or: [{ email: identifier }, { username: identifier }]
+    });
     if (!user) {
       return res.status(400).json({ message: 'Invalid credentials' });
+    }
+
+    if (!user.password) {
+      return res.status(400).json({ message: 'Please use Google login for this account' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -44,6 +53,22 @@ router.post('/login', async (req, res) => {
     res.json({ token, message: 'Login successful' });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Google OAuth
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'], session: false }));
+
+router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/login', session: false }), async (req, res) => {
+  try {
+    const user = req.user;
+    // Directly issue token without OTP verification
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'fallback_secret_key_change_in_production', { expiresIn: '1h' });
+    const clientBase = process.env.CLIENT_URL || 'http://localhost:3000';
+    res.redirect(`${clientBase}/login?token=${token}`);
+  } catch (error) {
+    const clientBase = process.env.CLIENT_URL || 'http://localhost:3000';
+    res.redirect(`${clientBase}/login?error=oauth_error`);
   }
 });
 

@@ -29,6 +29,12 @@ const Register = () => {
     }
   };
 
+  const handleGoogleRegister = () => {
+    // This uses the same OAuth entrypoint as Login.
+    // The backend will create the user if they don't exist and return a JWT.
+    window.location.href = 'https://full-stack-sitetest.onrender.com/api/auth/google';
+  };
+
   return (
     <div className={`form-container ${isLoading ? 'loading' : ''}`}>
       <h2>Register</h2>
@@ -76,6 +82,9 @@ const Register = () => {
           {isLoading ? 'Registering...' : 'Register'}
         </button>
       </form>
+      <button onClick={handleGoogleRegister} className="google-login-btn">
+        Continue with Google
+      </button>
       {message && (
         <div className={`message ${message.type}`} role="alert">
           {message.text}
