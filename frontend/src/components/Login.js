@@ -32,7 +32,7 @@ const Login = () => {
     setIsLoading(true);
     setMessage('');
     try {
-      const response = await axios.post('https://full-stack-sitetest.onrender.com/api/auth/login', formData);
+      const response = await axios.post('https://full-stack-sitetest-backend.onrender.com/api/auth/login', formData);
       setMessage({ text: response.data.message, type: 'success' });
       localStorage.setItem('token', response.data.token);
     } catch (error) {
@@ -43,7 +43,7 @@ const Login = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = 'https://full-stack-sitetest.onrender.com/api/auth/google';
+    window.location.href = 'https://full-stack-sitetest-backend.onrender.com/api/auth/google';
   };
 
   

@@ -20,7 +20,7 @@ const Register = () => {
     setIsLoading(true);
     setMessage('');
     try {
-      const response = await axios.post('https://full-stack-sitetest.onrender.com/api/auth/register', formData);
+      const response = await axios.post('https://full-stack-sitetest-backend.onrender.com/api/auth/register', formData);
       setMessage({ text: response.data.message, type: 'success' });
     } catch (error) {
       setMessage({ text: error.response?.data?.message || 'Registration failed', type: 'error' });
@@ -32,7 +32,7 @@ const Register = () => {
   const handleGoogleRegister = () => {
     // This uses the same OAuth entrypoint as Login.
     // The backend will create the user if they don't exist and return a JWT.
-    window.location.href = 'https://full-stack-sitetest.onrender.com/api/auth/google';
+    window.location.href = 'https://full-stack-sitetest-backend.onrender.com/api/auth/google';
   };
 
   return (
