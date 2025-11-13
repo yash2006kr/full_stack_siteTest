@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +10,17 @@ const Register = () => {
   });
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const token = params.get('token');
+    const registered = params.get('registered');
+    if (token && registered === '1') {
+      localStorage.setItem('token', token);
+      setMessage({ text: 'Registered successfully!', type: 'success' });
+    }
+  }, [location]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

@@ -65,7 +65,10 @@ router.get('/google/callback', passport.authenticate('google', { failureRedirect
     // Directly issue token without OTP verification
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'fallback_secret_key_change_in_production', { expiresIn: '1h' });
     const clientBase = process.env.CLIENT_URL || 'https://full-stack-sitetest-frontend.onrender.com';
-    res.redirect(`${clientBase}/login?token=${token}`);
+    const isNew = user && user.wasJustCreated;
+    const targetPath = isNew ? '/register' : '/login';
+    const extra = isNew ? '&registered=1' : '';
+    res.redirect(`${clientBase}${targetPath}?token=${token}${extra}`);
   } catch (error) {
     const clientBase = process.env.CLIENT_URL || 'https://full-stack-sitetest-frontend.onrender.com';
     res.redirect(`${clientBase}/login?error=oauth_error`);

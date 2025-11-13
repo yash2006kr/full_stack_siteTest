@@ -35,6 +35,8 @@ passport.use(new GoogleStrategy({
           verified: true // Will verify via OTP
         });
         await user.save();
+        // mark as just created so downstream can redirect to register success
+        user.wasJustCreated = true;
       }
     }
     return done(null, user);
